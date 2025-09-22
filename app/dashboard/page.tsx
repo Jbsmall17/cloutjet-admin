@@ -1,6 +1,7 @@
 "use client"
 
 import { AdminLayout } from "@/components/admin-layout"
+import Loader from "@/components/loader"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useContextValue } from "@/context/context"
 import { formatDate } from "@/lib/utils"
@@ -36,7 +37,7 @@ const timeAgo =(timeStamp: string) =>{
 
 
 export default function DashboardPage() {
-  const {adminStats, setAdminStats, isAdminStatsRequested, setIsAccountRequested} = useContextValue()
+  const {adminStats, setAdminStats, isAdminStatsRequested, setIsAdminStatsRequested} = useContextValue()
   const router = useRouter()
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -81,7 +82,7 @@ export default function DashboardPage() {
       }
     })
     .then((res)=>{
-      setIsAccountRequested(true)
+      setIsAdminStatsRequested(true)
       console.log({...res.data.data})
       setAdminStats((prev)=>{
         return {
@@ -177,7 +178,11 @@ export default function DashboardPage() {
                 )
                 : (
                    <div className="ml-4 flex justify-center items-center min-h-[175px] rounded-xl border">
-                    <p className="text-sm">No recent activity</p>
+                    {
+                      loading
+                      ? <Loader height={8} width={8} color="primary" />
+                      : <p className="text-sm">No recent activity</p>
+                    }
                   </div>
                 )
               }

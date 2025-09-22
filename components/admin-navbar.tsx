@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils"
 import { Users, CreditCard, Star, ShoppingCart, LogOut, X } from "lucide-react"
 import { AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle,AlertDialogTrigger } from "./ui/alert-dialog"
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog"
+import { set } from "date-fns"
+import { useContextValue } from "@/context/context"
 
 const navigation = [
   { name: "Accounts", href: "/dashboard/accounts", icon: Users },
@@ -23,10 +25,17 @@ interface AdminNavbarProps {
 }
 
 export function AdminNavbar({ pathname, sidebarOpen, onSidebarClose }: AdminNavbarProps) {
+  const {setIsAdminStatsRequested, setIsAccountRequested, setIsEscrowRequested, setIsInfluencerRequested, setIsOrderRequested} = useContextValue()
   const router = useRouter()
 
   const handleLogout = () => {
     sessionStorage.removeItem("token")
+    setIsAdminStatsRequested(false)
+    setIsAccountRequested(false)
+    setIsEscrowRequested(false)
+    setIsInfluencerRequested(false)
+    setIsOrderRequested(false)
+    onSidebarClose()
     router.push("/")
   }
 
@@ -37,7 +46,7 @@ export function AdminNavbar({ pathname, sidebarOpen, onSidebarClose }: AdminNavb
         <div className="fixed inset-0 bg-black/50" onClick={onSidebarClose} />
         <div className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border">
           <div className="flex h-16 items-center justify-between px-4">
-            <Image onClick={() => router.push("/dashboard")} src="/cloutjet-logo.svg" alt="Clout Jet" width={40} height={40} className="object-contain" />
+            <Image onClick={() => {router.push("/dashboard"); onSidebarClose();}} src="/cloutjet-logo.svg" alt="Clout Jet" width={40} height={40} className="object-contain" />
             <Button variant="ghost" size="sm" onClick={onSidebarClose}>
               <X className="h-4 w-4" />
             </Button>
@@ -93,7 +102,7 @@ export function AdminNavbar({ pathname, sidebarOpen, onSidebarClose }: AdminNavb
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-card border-r border-border px-6">
           <div className="flex h-16 shrink-0 items-center">
-            <Image onClick={() => router.push("/dashboard")} src="/cloutjet-logo.svg" alt="Clout Jet" width={40} height={40} className="object-contain cursor-pointer" />
+            <Image onClick={() => {router.push("/dashboard"); onSidebarClose()}} src="/cloutjet-logo.svg" alt="Clout Jet" width={40} height={40} className="object-contain cursor-pointer" />
             <span className="ml-3 text-lg font-semibold">Admin</span>
           </div>
           <nav className="flex flex-1 flex-col">
